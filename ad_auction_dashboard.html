@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Auction Intelligence Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: linear-gradient(165deg, #f7fbff 0%, #e8f1ff 45%, #ffffff 100%);
+            --fg: #1a2336;
+            --muted: #5a6b88;
+            --accent: #2667ff;
+            --card: rgba(255, 255, 255, 0.9);
+            --border: rgba(38, 103, 255, 0.12);
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(2.2rem, 4vw, 4rem) clamp(1.4rem, 4vw, 3.4rem);
+        }
+        header {
+            width: 100%;
+            max-width: 1100px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 2.4rem;
+        }
+        header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(2.4rem, 4vw, 3.1rem);
+        }
+        header p {
+            margin: 0.6rem auto 0;
+            max-width: 760px;
+            color: var(--muted);
+            font-size: 1.04rem;
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(38, 103, 255, 0.25);
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--muted);
+            text-decoration: none;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .back-link:hover {
+            transform: translateX(-4px);
+            border-color: rgba(38, 103, 255, 0.55);
+            box-shadow: 0 12px 28px rgba(38, 103, 255, 0.22);
+        }
+        main {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+        }
+        section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: clamp(1.8rem, 3.4vw, 2.6rem);
+            box-shadow: 0 24px 70px rgba(27, 62, 148, 0.16);
+        }
+        h2 {
+            margin: 0 0 1rem;
+            font-size: clamp(1.55rem, 2.4vw, 2rem);
+        }
+        p {
+            margin: 0.75rem 0 1.1rem;
+            font-size: 1rem;
+        }
+        ul {
+            margin: 0.6rem 0 0;
+            padding-left: 1.3rem;
+        }
+        li {
+            margin-bottom: 0.55rem;
+        }
+        .media-wrapper {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(38, 103, 255, 0.15);
+            box-shadow: 0 22px 60px rgba(27, 62, 148, 0.18);
+            background: rgba(10, 20, 40, 0.85);
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        @media (max-width: 720px) {
+            header {
+                text-align: left;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <h1>Ad Auction Intelligence Dashboard</h1>
+        <p>
+            A coursework project that transforms raw ad auction logs into interactive analytics. Upload a campaign bundle, explore KPIs
+            by audience and context, and export insights with a single click—all governed by clear user roles.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>What the Dashboard Delivers</h2>
+            <p>
+                Marketing analysts can upload zip files containing <code>server_log</code>, <code>impression_log</code>, and <code>click_log</code>. The system parses,
+                enriches, and displays the combined dataset as slicing-friendly charts. Filters for age, user ID, context, and date range
+                keep deep dives quick, while exports provide CSV data and PNG snapshots for slide decks.
+            </p>
+            <ul>
+                <li>Admins manage campaigns, invite teammates, and adjust global filters and default KPIs.</li>
+                <li>Editors tweak campaign settings and preset dashboards without touching access policies.</li>
+                <li>Viewers focus on analysis—zooming charts, comparing cohorts, and downloading assets for reports.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Dashboard Walkthrough Video</h2>
+            <div class="media-wrapper">
+                <video controls preload="metadata">
+                    <source src="assets/capstone/video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p>
+                Watch the dashboard flow from upload to insight: bringing a campaign.zip online, slicing KPIs with real-time filters, and exporting the final charts.
+            </p>
+        </section>
+    </main>
+</body>
+</html>

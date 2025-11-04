@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Techniques — K-Means Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: linear-gradient(180deg, #0d172a, #101d36 45%, #0d172a 100%);
+            --fg: #edf2ff;
+            --muted: #9cb3d8;
+            --accent: #7cc4ff;
+        }
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(2.5rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 3rem);
+        }
+        header {
+            width: 100%;
+            max-width: 960px;
+            position: relative;
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        h1 {
+            margin: 0 0 0.4rem;
+            font-size: clamp(2.1rem, 3.4vw, 3rem);
+        }
+        p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.02rem;
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            text-decoration: none;
+            color: var(--muted);
+            padding: 6px 14px;
+            border: 1px solid rgba(124, 196, 255, 0.3);
+            border-radius: 999px;
+            transition: all 0.2s ease;
+        }
+        .back-link:hover {
+            color: var(--accent);
+            border-color: rgba(124, 196, 255, 0.6);
+            transform: translateX(-4px);
+        }
+        .report-frame {
+            width: 100%;
+            max-width: 960px;
+            flex: 1 1 auto;
+            background: rgba(8, 14, 26, 0.7);
+            border: 1px solid rgba(124, 196, 255, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 120px rgba(46, 120, 190, 0.3);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 70vh;
+            border: none;
+        }
+        @media (max-width: 768px) {
+            header {
+                text-align: left;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <h1>Machine Learning Techniques — K-Means Clustering Study</h1>
+        <p>Complete report viewer. Scroll or download to review preprocessing, evaluation pipeline, and clustering analysis.</p>
+    </header>
+
+    <div class="report-frame">
+        <iframe src="reports/MLT__Copy_.pdf" title="K-Means Clustering Report"></iframe>
+    </div>
+</body>
+</html>

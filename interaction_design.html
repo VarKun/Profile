@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaction Design Coursework — Energy Garden</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: radial-gradient(circle at top left, #f7f9ff, #f0f4ff 45%, #ffffff 100%);
+            --fg: #19223c;
+            --muted: #50618c;
+            --accent: #3a7d44;
+            --accent-soft: rgba(58, 125, 68, 0.18);
+            --panel: rgba(255, 255, 255, 0.9);
+            --border: rgba(34, 48, 86, 0.08);
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.65;
+            margin: 0;
+            padding: clamp(2.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            max-width: 1080px;
+            position: relative;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        header h1 {
+            font-size: clamp(2.4rem, 4vw, 3.4rem);
+            margin: 0 0 0.6rem;
+            color: #143d25;
+        }
+        header p {
+            margin: 0 auto;
+            max-width: 720px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .report-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 125, 68, 0.3);
+            color: #1d4f2f;
+            background: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .report-link:hover {
+            transform: translateY(-2px);
+            border-color: rgba(58, 125, 68, 0.6);
+            box-shadow: 0 10px 24px rgba(58, 125, 68, 0.15);
+        }
+        .back-link {
+            position: absolute;
+            top: -16px;
+            left: 0;
+            text-decoration: none;
+            color: var(--muted);
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 61, 37, 0.2);
+            backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+        }
+        .back-link:hover {
+            color: var(--accent);
+            border-color: rgba(58, 125, 68, 0.6);
+            transform: translateX(-4px);
+        }
+        main {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.6rem;
+        }
+        section {
+            background: var(--panel);
+            border-radius: 24px;
+            padding: clamp(1.8rem, 3vw, 2.6rem);
+            border: 1px solid var(--border);
+            box-shadow: 0 24px 60px rgba(20, 61, 37, 0.12);
+        }
+        h2 {
+            font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+            margin: 0 0 1rem;
+            color: #1d4f2f;
+        }
+        p, li {
+            font-size: 1rem;
+        }
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+        .insight-card {
+            background: linear-gradient(145deg, rgba(58, 125, 68, 0.08), rgba(58, 125, 68, 0));
+            border-radius: 18px;
+            padding: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            border: 1px solid rgba(58, 125, 68, 0.12);
+        }
+        .insight-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #19452b;
+        }
+        .insight-card svg {
+            width: 100%;
+            height: 90px;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 1.8rem;
+            display: grid;
+            gap: 1.4rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.6rem;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, rgba(58, 125, 68, 0.4), rgba(58, 125, 68, 0));
+        }
+        .timeline-item {
+            position: relative;
+            padding: 1rem 1.2rem;
+            border-radius: 18px;
+            background: rgba(58, 125, 68, 0.07);
+            border: 1px solid rgba(58, 125, 68, 0.16);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.3rem;
+            top: 1.2rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 6px rgba(58, 125, 68, 0.15);
+        }
+        .timeline-item h3 {
+            margin: 0 0 0.4rem;
+            font-size: 1.15rem;
+            color: #143d25;
+        }
+        .system-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.4rem;
+        }
+        .diagram-card {
+            padding: 1.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 48, 86, 0.12);
+            background: linear-gradient(160deg, rgba(20, 61, 37, 0.12), rgba(255, 255, 255, 0.9));
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .diagram-card h3 {
+            margin: 0;
+            font-size: 1.08rem;
+            color: #103422;
+        }
+        .diagram-card svg {
+            width: 100%;
+            height: 120px;
+        }
+        @media (max-width: 720px) {
+            header {
+                text-align: left;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <h1>Interaction Design Coursework — Energy Garden</h1>
+        <a class="report-link" href="reports/Interactive_Design_Coursework__Copy_.pdf" target="_blank" rel="noopener">View full report ↗</a>
+        <p>
+            A Spring 2024 studio project exploring how playful feedback loops can reshape everyday energy habits.
+            Research uncovered behavioural frictions and inspired a mobile app that rewards sustainable streaks while
+            keeping comfort and control in the homeowner’s hands.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Research Signals</h2>
+            <p>
+                Semi-structured interviews with renters, families, and eco-conscious homeowners revealed that automation
+                alone rarely changes behaviour. We clustered feedback into motivation pillars that guided ideation.
+            </p>
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <svg viewBox="0 0 160 90" role="img" aria-label="Convenience versus effort scale">
+                        <rect x="10" y="20" width="140" height="8" fill="#cbe6cf" rx="4"></rect>
+                        <rect x="10" y="20" width="70" height="8" fill="#3a7d44" rx="4"></rect>
+                        <circle cx="70" cy="24" r="9" fill="#2d5f34"></circle>
+                        <text x="10" y="70" font-size="12" fill="#2d5f34">Less steps sustains habits</text>
+                    </svg>
+                    <h3>Convenience</h3>
+                    <p>Participants resisted tools that added chores; our interface had to fit inside existing routines.</p>
+                </div>
+                <div class="insight-card">
+                    <svg viewBox="0 0 160 90" role="img" aria-label="Comfort vs savings plot">
+                        <path d="M20 65 C40 40, 80 50, 140 20" fill="none" stroke="#3a7d44" stroke-width="5" stroke-linecap="round"></path>
+                        <circle cx="110" cy="32" r="9" fill="#2d5f34"></circle>
+                        <text x="18" y="80" font-size="12" fill="#2d5f34">Comfort first, savings second</text>
+                    </svg>
+                    <h3>Comfort</h3>
+                    <p>People were happy to save energy so long as warmth, light, and personal downtime stayed intact.</p>
+                </div>
+                <div class="insight-card">
+                    <svg viewBox="0 0 160 90" role="img" aria-label="Coins stacking up">
+                        <g fill="#3a7d44">
+                            <ellipse cx="50" cy="65" rx="22" ry="8" opacity="0.25"></ellipse>
+                            <ellipse cx="80" cy="50" rx="22" ry="8" opacity="0.35"></ellipse>
+                            <ellipse cx="110" cy="35" rx="22" ry="8"></ellipse>
+                            <rect x="88" y="35" width="44" height="18" rx="9"></rect>
+                        </g>
+                        <text x="24" y="78" font-size="12" fill="#2d5f34">Savings motivate streaks</text>
+                    </svg>
+                    <h3>Cost & Impact</h3>
+                    <p>Real-time bill estimates and environmental progress bars made sustainable actions feel tangible.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Design Evolution</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Affinity Mapping</h3>
+                    <p>Clustered interview quotes into convenience, comfort, cost, scheduling, cognition, and planetary care hubs to define our challenge.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Concept Sprints</h3>
+                    <p>Sketched three divergent concepts—an energy-saving forest game, smart chargers, and an adaptive notification coach.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Energy Garden Selection</h3>
+                    <p>Chose the gamified concept for its ability to keep users in control while nudging behaviour through streaks and micro-rewards.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Prototype Loops</h3>
+                    <p>Iterated Figma wireframes, motion studies, and storyboards to visualise streak resets, forest growth, and smart-meter integrations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Motivational System Architecture</h2>
+            <p>
+                Energy Garden connects household meters to playful dashboards. The system balances short-term wins with long-term
+                ecological impact, reinforcing routines without punitive automation.
+            </p>
+            <div class="system-diagram">
+                <div class="diagram-card">
+                    <h3>Daily Streaks</h3>
+                    <svg viewBox="0 0 200 120" role="img" aria-label="Calendar streak visualization">
+                        <rect x="20" y="25" width="160" height="70" rx="14" fill="rgba(58,125,68,0.18)" stroke="#3a7d44" stroke-width="2"></rect>
+                        <g fill="#3a7d44">
+                            <circle cx="60" cy="60" r="14"></circle>
+                            <circle cx="100" cy="60" r="14"></circle>
+                            <circle cx="140" cy="60" r="14" fill="#2d5f34"></circle>
+                        </g>
+                        <text x="32" y="100" font-size="12" fill="#19452b">Visual streak calendar celebrates consistency.</text>
+                    </svg>
+                    <p>Players earn daily streaks by staying under personalised consumption thresholds, fuelling intrinsic motivation.</p>
+                </div>
+                <div class="diagram-card">
+                    <h3>Forest Health</h3>
+                    <svg viewBox="0 0 200 120" role="img" aria-label="Forest growth illustration">
+                        <rect x="0" y="70" width="200" height="50" fill="#d9f1df"></rect>
+                        <path d="M40 70 L55 40 L70 70 Z" fill="#3a7d44"></path>
+                        <path d="M90 70 L108 32 L126 70 Z" fill="#2d5f34"></path>
+                        <path d="M140 70 L153 45 L166 70 Z" fill="#3a7d44"></path>
+                        <text x="30" y="108" font-size="12" fill="#19452b">Thriving trees mirror reduced emissions.</text>
+                    </svg>
+                    <p>Each saved kilowatt feeds a virtual forest, providing a calming, ambient reminder of progress.</p>
+                </div>
+                <div class="diagram-card">
+                    <h3>Battery Bank</h3>
+                    <svg viewBox="0 0 200 120" role="img" aria-label="Battery and rewards flow">
+                        <rect x="40" y="30" width="120" height="50" rx="12" fill="#cbe6cf" stroke="#3a7d44" stroke-width="2"></rect>
+                        <rect x="150" y="40" width="12" height="30" rx="4" fill="#3a7d44"></rect>
+                        <text x="54" y="60" font-size="16" fill="#2d5f34">Power Bank</text>
+                        <text x="20" y="104" font-size="12" fill="#19452b">Stored savings unlock seeds, water, compost.</text>
+                    </svg>
+                    <p>Spare savings accumulate into a “power bank” economy that unlocks custom forest assets and peer challenges.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYKEY Graph Query Language — Programming Language Concepts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: radial-gradient(circle at top, #161f36, #0e1526 60%, #090d18 100%);
+            --fg: #f2f5ff;
+            --muted: #a9b6d7;
+            --accent: #7c5cff;
+            --panel: rgba(20, 28, 48, 0.72);
+            --border: rgba(124, 92, 255, 0.25);
+        }
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: clamp(2.8rem, 5vw, 4rem) clamp(1.6rem, 4vw, 3.6rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            max-width: 1080px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: clamp(2.3rem, 4vw, 3.4rem);
+            letter-spacing: 0.02em;
+        }
+        header p {
+            margin: 0.6rem auto 0;
+            max-width: 760px;
+            font-size: 1.05rem;
+            color: var(--muted);
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border: 1px solid rgba(124, 92, 255, 0.35);
+            border-radius: 999px;
+            transition: all 0.2s ease;
+        }
+        .back-link:hover {
+            color: var(--accent);
+            border-color: rgba(124, 92, 255, 0.7);
+            transform: translateX(-4px);
+        }
+        .report-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(124, 92, 255, 0.35);
+            color: #dcd9ff;
+            background: rgba(13, 20, 36, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .report-link:hover {
+            transform: translateY(-2px);
+            border-color: rgba(124, 92, 255, 0.7);
+            box-shadow: 0 12px 30px rgba(124, 92, 255, 0.3);
+        }
+        main {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+        }
+        section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: clamp(2rem, 3.5vw, 2.8rem);
+            box-shadow: 0 28px 70px rgba(18, 22, 38, 0.4);
+        }
+        h2 {
+            margin: 0 0 1rem;
+            font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+            text-align: center;
+        }
+        p, li {
+            font-size: 1.02rem;
+            line-height: 1.7;
+        }
+        ul {
+            margin: 0.6rem 0 0;
+            padding-left: 1.4rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.6rem;
+        }
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card {
+            background: rgba(15, 20, 36, 0.85);
+            border-radius: 20px;
+            padding: 1.6rem;
+            border: 1px solid rgba(124, 92, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .card svg {
+            width: 100%;
+            height: 120px;
+        }
+        .pipeline {
+            display: grid;
+            gap: 1.4rem;
+        }
+        .pipeline-step {
+            display: grid;
+            grid-template-columns: minmax(160px, 220px) 1fr;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(11, 16, 28, 0.85);
+            padding: 1.4rem 1.6rem;
+            border-radius: 18px;
+            border: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        .pipeline-step > div {
+            display: contents;
+        }
+        .pipeline-step h3 {
+            grid-column: 1 / -1;
+            margin: 0 0 0.8rem 0;
+            font-size: 1.05rem;
+            color: #d9d8ff;
+            text-align: center;
+        }
+        .pipeline-step svg {
+            width: 100%;
+            height: 90px;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: rgba(9, 15, 30, 0.9);
+            border: 1px solid rgba(124, 92, 255, 0.25);
+            padding: 0.25rem 0.45rem;
+            border-radius: 6px;
+            color: #f2f0ff;
+            font-size: 0.92rem;
+        }
+        .viz-suite {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .viz-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .viz-tab {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(124, 92, 255, 0.35);
+            background: rgba(12, 18, 34, 0.9);
+            color: #ebeaff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .viz-tab:hover {
+            transform: translateY(-1px);
+            border-color: rgba(124, 92, 255, 0.6);
+        }
+        .viz-tab.active {
+            background: rgba(124, 92, 255, 0.35);
+            border-color: rgba(124, 92, 255, 0.85);
+            box-shadow: 0 6px 20px rgba(124, 92, 255, 0.28);
+        }
+        .viz-panel {
+            border-radius: 20px;
+            border: 1px solid rgba(124, 92, 255, 0.25);
+            background: rgba(9, 14, 28, 0.9);
+            padding: clamp(1.6rem, 3vw, 2.2rem);
+            min-height: 240px;
+        }
+        .viz-content {
+            display: none;
+        }
+        .viz-content.active {
+            display: block;
+        }
+        .viz-label {
+            display: inline-block;
+            margin-bottom: 0.6rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(220, 217, 255, 0.65);
+        }
+        .viz-panel svg {
+            width: 100%;
+            height: 180px;
+        }
+        .search-widget {
+            position: absolute;
+            top: -18px;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .search-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(124, 92, 255, 0.45);
+            background: rgba(10, 16, 30, 0.8);
+            color: #dcd9ff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .search-toggle:hover,
+        .search-widget:focus-within .search-toggle {
+            transform: translateY(-1px);
+            border-color: rgba(124, 92, 255, 0.8);
+            box-shadow: 0 8px 18px rgba(124, 92, 255, 0.25);
+        }
+        .search-input {
+            width: 0;
+            opacity: 0;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(124, 92, 255, 0.4);
+            background: rgba(11, 18, 36, 0.9);
+            color: #edf0ff;
+            font-size: 0.9rem;
+            transition: width 0.25s ease, opacity 0.2s ease;
+        }
+        .search-widget:hover .search-input,
+        .search-widget:focus-within .search-input {
+            width: 220px;
+            opacity: 1;
+        }
+        .search-input::placeholder {
+            color: rgba(220, 217, 255, 0.6);
+        }
+        .search-feedback {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: rgba(220, 217, 255, 0.65);
+            min-height: 1.2rem;
+        }
+        @media (max-width: 720px) {
+            header {
+                text-align: left;
+            }
+            .pipeline-step {
+                grid-template-columns: 1fr;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+            }
+            .search-widget {
+                top: auto;
+                bottom: -54px;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <form class="search-widget" id="docSearchForm" role="search">
+            <button type="button" class="search-toggle" aria-label="Search MYKEY page">
+                🔍
+            </button>
+            <input class="search-input" id="docSearchInput" type="search" placeholder="Search this page…" aria-label="Search this page">
+        </form>
+        <h1>MYKEY Graph Query Language</h1>
+        <a class="report-link" href="reports/PLC__Copy_.pdf" target="_blank" rel="noopener">View report ↗</a>
+        <p>
+            A Fall 2024 Programming Language Concepts project that designs and implements MYKEY — a declarative DSL
+            tailored for querying Neo4j graphs with compile-time guarantees and expressive graph operators.
+            The compiler is implemented in Haskell, leveraging functional programming paradigms for robust parsing,
+            type checking, and error reporting.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Language Intent</h2>
+            <p>
+                MYKEY blends Cypher-inspired syntax with SQL clarity, letting analysts describe what graph patterns to retrieve
+                while the runtime handles traversal. Queries embrace <code>MATCH</code>, <code>OPTIONAL MATCH</code>, and custom constructs
+                such as <code>EACH … BY</code> for property aggregation and <code>FILL</code> for confident updates.
+            </p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Expressive Grammar</h3>
+                    <svg viewBox="0 0 220 120" role="img" aria-label="Grammar hierarchy diagram">
+                        <rect x="20" y="20" width="180" height="30" rx="12" fill="#7c5cff" opacity="0.25"></rect>
+                        <rect x="40" y="55" width="140" height="26" rx="10" fill="#7c5cff" opacity="0.35"></rect>
+                        <rect x="60" y="85" width="100" height="22" rx="9" fill="#7c5cff"></rect>
+                        <text x="40" y="40" fill="#dcd9ff" font-size="12">Input  → Nodes / Relationships</text>
+                        <text x="55" y="72" fill="#dcd9ff" font-size="12">Match → Pattern, Optional</text>
+                        <text x="74" y="102" fill="#dcd9ff" font-size="12">Where, Return</text>
+                    </svg>
+                    <p>BNF definitions cover inputs, path patterns, and property projections to keep parsing deterministic.</p>
+                </div>
+                <div class="card">
+                    <h3>Static Scoping</h3>
+                    <svg viewBox="0 0 220 120" role="img" aria-label="Scope highlighting illustration">
+                        <rect x="30" y="25" width="70" height="70" rx="12" fill="rgba(124,92,255,0.25)"></rect>
+                        <rect x="90" y="35" width="100" height="60" rx="12" fill="rgba(124,92,255,0.15)"></rect>
+                        <circle cx="70" cy="60" r="12" fill="#7c5cff"></circle>
+                        <text x="46" y="98" fill="#dcd9ff" font-size="12">Identifiers resolved at compile time.</text>
+                    </svg>
+                    <p>Variables are bound where they are declared; nested paths reuse only in-scope identifiers, preventing runtime surprises.</p>
+                </div>
+                <div class="card">
+                    <h3>Type Safety</h3>
+                    <svg viewBox="0 0 220 120" role="img" aria-label="Type checker balance">
+                        <polygon points="110,20 190,90 30,90" fill="rgba(124,92,255,0.2)"></polygon>
+                        <rect x="95" y="40" width="30" height="45" fill="#7c5cff"></rect>
+                        <text x="55" y="104" fill="#dcd9ff" font-size="12">Boolean WHERE, typed updates, safe maths.</text>
+                    </svg>
+                    <p>Expressions evaluate to explicit types; mismatches in <code>WHERE</code>, <code>FILL</code>, or aggregations surface compile errors.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Interactive Structures</h2>
+            <p>
+                Toggle between views to see how MYKEY’s grammar expands, how a sample query maps to an abstract syntax tree,
+                and how the compiler executes each stage.
+            </p>
+            <div class="viz-suite">
+                <div class="viz-tabs">
+                    <button class="viz-tab active" data-target="grammar">Grammar Tree</button>
+                    <button class="viz-tab" data-target="ast">Abstract Syntax Tree</button>
+                    <button class="viz-tab" data-target="execution">Execution Flow</button>
+                </div>
+                <div class="viz-panel">
+                    <div class="viz-content active" id="viz-grammar">
+                        <span class="viz-label">BNF Breakdown</span>
+                        <svg viewBox="0 0 520 200" role="img" aria-label="Grammar expansion tree">
+                            <g fill="none" stroke="#7c5cff" stroke-width="2">
+                                <line x1="260" y1="30" x2="160" y2="80"></line>
+                                <line x1="260" y1="30" x2="360" y2="80"></line>
+                                <line x1="160" y1="80" x2="110" y2="140"></line>
+                                <line x1="160" y1="80" x2="210" y2="140"></line>
+                                <line x1="360" y1="80" x2="310" y2="140"></line>
+                                <line x1="360" y1="80" x2="410" y2="140"></line>
+                                <line x1="410" y1="140" x2="460" y2="180"></line>
+                                <line x1="410" y1="140" x2="370" y2="180"></line>
+                            </g>
+                            <g fill="#dcd9ff" font-size="13">
+                                <text x="240" y="24">&lt;Query&gt;</text>
+                                <text x="118" y="76">&lt;MatchClause&gt;</text>
+                                <text x="338" y="76">&lt;ReturnClause&gt;</text>
+                                <text x="72" y="138">MATCH</text>
+                                <text x="188" y="138">&lt;Pattern&gt;</text>
+                                <text x="288" y="138">RETURN</text>
+                                <text x="356" y="138">&lt;Projection&gt;</text>
+                                <text x="438" y="176">&lt;Property&gt;</text>
+                                <text x="328" y="176">&lt;Alias&gt;</text>
+                            </g>
+                        </svg>
+                        <p>The grammar expands predictably from <code>&lt;Query&gt;</code> into clauses and projections, keeping parser states deterministic.</p>
+                    </div>
+                    <div class="viz-content" id="viz-ast">
+                        <span class="viz-label">AST Snapshot</span>
+                        <svg viewBox="0 0 520 200" role="img" aria-label="Abstract syntax tree">
+                            <g fill="none" stroke="#7c5cff" stroke-width="2">
+                                <line x1="260" y1="30" x2="180" y2="80"></line>
+                                <line x1="260" y1="30" x2="340" y2="80"></line>
+                                <line x1="180" y1="80" x2="130" y2="130"></line>
+                                <line x1="180" y1="80" x2="230" y2="130"></line>
+                                <line x1="340" y1="80" x2="290" y2="130"></line>
+                                <line x1="340" y1="80" x2="390" y2="130"></line>
+                                <line x1="390" y1="130" x2="430" y2="170"></line>
+                            </g>
+                            <g fill="#dcd9ff" font-size="13">
+                                <text x="232" y="24">Query</text>
+                                <text x="148" y="76">MatchNode</text>
+                                <text x="316" y="76">ReturnNode</text>
+                                <text x="100" y="128">Person</text>
+                                <text x="210" y="128">COLLAB</text>
+                                <text x="270" y="128">Alias</text>
+                                <text x="360" y="128">Projection</text>
+                                <text x="408" y="168">impact</text>
+                            </g>
+                        </svg>
+                        <p>AST nodes encode pattern intent separately from projections, feeding the type checker with structured context.</p>
+                    </div>
+                    <div class="viz-content" id="viz-execution">
+                        <span class="viz-label">Execution Lifecycle</span>
+                        <svg viewBox="0 0 520 200" role="img" aria-label="Execution flow">
+                            <g fill="none" stroke="#7c5cff" stroke-width="2">
+                                <rect x="70" y="40" width="120" height="40" rx="12"></rect>
+                                <rect x="220" y="40" width="120" height="40" rx="12"></rect>
+                                <rect x="370" y="40" width="120" height="40" rx="12"></rect>
+                                <rect x="145" y="120" width="120" height="40" rx="12"></rect>
+                                <rect x="295" y="120" width="120" height="40" rx="12"></rect>
+                                <line x1="190" y1="60" x2="220" y2="60"></line>
+                                <line x1="340" y1="60" x2="370" y2="60"></line>
+                                <line x1="130" y1="80" x2="200" y2="120"></line>
+                                <line x1="320" y1="80" x2="345" y2="120"></line>
+                            </g>
+                            <g fill="#dcd9ff" font-size="12">
+                                <text x="96" y="64">Lexer</text>
+                                <text x="244" y="64">Parser</text>
+                                <text x="392" y="64">Type Check</text>
+                                <text x="162" y="144">Plan Builder</text>
+                                <text x="318" y="144">Result Stream</text>
+                            </g>
+                        </svg>
+                        <p>Tokens feed the parser, static checks approve the plan, and the executor streams rows directly from the graph backend.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Compiler Pipeline</h2>
+            <div class="pipeline">
+                <div class="pipeline-step">
+                    <div>
+                        <h3>01 • Graph Loader</h3>
+                        <p>Node and relationship CSVs convert into in-memory <code>Graph</code> structures capturing labels, properties, and typed values.</p>
+                    </div>
+                    <svg viewBox="0 0 200 90" role="img" aria-label="Graph conversion">
+                        <g fill="rgba(124,92,255,0.45)">
+                            <circle cx="60" cy="45" r="18"></circle>
+                            <circle cx="120" cy="30" r="14"></circle>
+                            <circle cx="140" cy="60" r="16"></circle>
+                        </g>
+                        <line x1="60" y1="45" x2="120" y2="30" stroke="#7c5cff" stroke-width="3" stroke-linecap="round"></line>
+                        <line x1="120" y1="30" x2="140" y2="60" stroke="#7c5cff" stroke-width="3" stroke-linecap="round"></line>
+                    </svg>
+                </div>
+                <div class="pipeline-step">
+                    <div>
+                        <h3>02 • Lexer & Parser</h3>
+                        <p>Whitespace and comments are stripped, tokens emitted, and recursive-descent parsing builds ASTs that mirror the BNF.</p>
+                    </div>
+                    <svg viewBox="0 0 200 90" role="img" aria-label="Token stream">
+                        <rect x="20" y="35" width="40" height="20" rx="6" fill="#7c5cff" opacity="0.6"></rect>
+                        <rect x="70" y="25" width="40" height="20" rx="6" fill="#7c5cff" opacity="0.4"></rect>
+                        <rect x="120" y="45" width="40" height="20" rx="6" fill="#7c5cff"></rect>
+                        <rect x="170" y="30" width="20" height="20" rx="6" fill="#7c5cff" opacity="0.3"></rect>
+                    </svg>
+                </div>
+                <div class="pipeline-step">
+                    <div>
+                        <h3>03 • Type Checker</h3>
+                        <p>Ensures <code>WHERE</code> clauses resolve to booleans, arithmetic stays numeric, and <code>FILL</code>/<code>EACH</code> respect property types.</p>
+                    </div>
+                    <svg viewBox="0 0 200 90" role="img" aria-label="Type checking scales">
+                        <line x1="30" y1="60" x2="170" y2="60" stroke="#7c5cff" stroke-width="4" stroke-linecap="round"></line>
+                        <circle cx="70" cy="45" r="15" fill="#7c5cff" opacity="0.6"></circle>
+                        <circle cx="130" cy="45" r="12" fill="#7c5cff"></circle>
+                        <text x="40" y="80" fill="#dcd9ff" font-size="12">Rejects ill-typed updates early.</text>
+                    </svg>
+                </div>
+                <div class="pipeline-step">
+                    <div>
+                        <h3>04 • Error Messaging</h3>
+                        <p>Compiler emits location-aware diagnostics such as <em>“WHERE condition must be TypeBool”</em> to guide quick fixes.</p>
+                    </div>
+                    <svg viewBox="0 0 200 90" role="img" aria-label="Error notification">
+                        <rect x="40" y="25" width="120" height="40" rx="12" fill="rgba(124,92,255,0.2)" stroke="#7c5cff" stroke-width="2"></rect>
+                        <circle cx="60" cy="45" r="10" fill="#ff6b81"></circle>
+                        <text x="80" y="50" fill="#dcd9ff" font-size="12">Line 14: WHERE must be boolean</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Sample Query</h2>
+            <p>
+                The snippet below demonstrates MYKEY’s declarative style. Developers capture collaborative relationships,
+                filter on weighted scores, and enrich properties confidently.
+            </p>
+            <pre style="background: rgba(9, 14, 28, 0.8); border-radius: 18px; padding: 1.6rem; border: 1px solid rgba(124,92,255,0.2); overflow-x: auto;">
+<code>MATCH (p:Person)-[r:COLLABORATED_WITH]->(q:Person)
+WHERE r.strength &gt; 0.7 AND NOT label IN q
+EACH amount BY r STRENGTH
+FILL p.impact WITH amount * 100
+RETURN p.name, p.impact</code>
+            </pre>
+            <p>
+                Thanks to static scoping and compile-time checking, the query above either succeeds with guaranteed types or
+                provides actionable diagnostics, reinforcing the language’s goal of confident graph computation.
+            </p>
+        </section>
+    </main>
+    <script>
+        const searchForm = document.getElementById('docSearchForm');
+        const searchInput = document.getElementById('docSearchInput');
+        const searchFeedback = document.createElement('div');
+        searchFeedback.className = 'search-feedback';
+        searchForm.insertAdjacentElement('afterend', searchFeedback);
+
+        function performSearch(term) {
+            if (!term) {
+                searchFeedback.textContent = '';
+                return;
+            }
+            const found = window.find
+                ? window.find(term, false, false, true, false, true, false)
+                : false;
+            if (found) {
+                searchFeedback.textContent = `Found “${term}”. Use Enter to jump again.`;
+            } else {
+                searchFeedback.textContent = `No matches for “${term}”.`;
+            }
+        }
+
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                performSearch(searchInput.value.trim());
+            }
+        });
+
+        searchInput.addEventListener('search', () => {
+            performSearch(searchInput.value.trim());
+        });
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            performSearch(searchInput.value.trim());
+        });
+
+        searchForm.addEventListener('click', () => {
+            searchInput.focus();
+        });
+
+        document.querySelectorAll('.viz-tab').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = 'viz-' + button.dataset.target;
+                document.querySelectorAll('.viz-tab').forEach(btn => btn.classList.toggle('active', btn === button));
+                document.querySelectorAll('.viz-content').forEach(panel => {
+                    panel.classList.toggle('active', panel.id === targetId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

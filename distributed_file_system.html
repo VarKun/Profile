@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed File System Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: dark light;
+            --bg: #0a0c1a;
+            --fg: #e8ecff;
+            --muted: #9aa3c2;
+            --accent: #4a8bff;
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            padding: 3rem clamp(1.5rem, 4vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 2.5rem;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 1rem;
+            font-size: clamp(2.1rem, 3vw, 2.8rem);
+        }
+        h2 {
+            font-size: clamp(1.45rem, 2.3vw, 1.9rem);
+        }
+        h3 {
+            font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+        }
+        p, li {
+            font-size: 1rem;
+            color: var(--fg);
+        }
+        p {
+            margin: 1rem 0;
+            text-align: left;
+        }
+        ul {
+            margin: 0.5rem 0 0 1.2rem;
+        }
+        strong {
+            color: #ffffff;
+        }
+        .hero {
+            position: relative;
+            max-width: 840px;
+            width: 100%;
+            margin: 0 auto 2rem;
+            text-align: center;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--muted);
+            text-align: center;
+        }
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+        .section {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: clamp(1.6rem, 3vw, 2.4rem);
+            margin: 0 auto;
+            box-shadow: 0 18px 40px rgba(10, 25, 68, 0.25);
+            text-align: left;
+        }
+        .section pre {
+            text-align: left;
+            margin: 1rem auto;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .section ul {
+            list-style: disc;
+            list-style-position: inside;
+            padding-left: 0;
+            text-align: left;
+        }
+        .section li {
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        .project-hero-image {
+            display: block;
+            margin: 1.4rem auto 0;
+            max-width: 85%;
+            border-radius: 16px;
+            box-shadow: 0 16px 36px rgba(10, 25, 68, 0.35);
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            transform: none;
+            font-size: 0.95rem;
+            color: var(--muted);
+            text-decoration: none;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 10px;
+            padding: 6px 12px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .back-link:hover {
+            color: #ffffff;
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+        .section h2:first-child {
+            margin-top: 0;
+        }
+        code, pre {
+            background: rgba(18, 22, 45, 0.8);
+            color: #d6dcff;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        a {
+            color: var(--accent);
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 2.5rem 1.25rem 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <a href="solar_system_cinematic_fixed.html" class="back-link">⟵ Back</a>
+        <h1>Distributed File System (Fall 2024)</h1>
+        <p>
+            A Java-based distributed storage platform featuring a controller and a fleet of data stores (Dstores).
+            The system executes STORE, LOAD, LIST, REMOVE operations for concurrent clients over persistent TCP links,
+            maintains R-way replication, and periodically rebalances replicas to handle joins, failures, and workload skew.
+        </p>
+    </header>
+
+    <main class="content">
+        <section class="section" id="introduction">
+            <h2>1. Introduction</h2>
+            <p>
+                The controller orchestrates requests, tracks file metadata (size, replicas, lifecycle state), and ensures that each
+                file is safely replicated across Dstores. Clients interact with the controller for metadata but transfer file
+                payloads directly with Dstores, improving scalability. Rebalance operations keep replica counts and load
+                distribution within bounds even when Dstores join or fail.
+            </p>
+            <img class="project-hero-image" src="./assets/capstone/distributed_system_overview.png" alt="Distributed File System Architecture">
+        </section>
+
+        <section class="section" id="networking">
+            <h2>2. Networking</h2>
+            <p>
+                Controller, Dstores, and clients communicate over persistent TCP sockets. Each Dstore maintains a single long-lived
+                connection with the controller; dropped connections trigger removal from the active pool. Text commands (e.g.,
+                <code>STORE</code>, <code>LIST</code>) flow via <code>PrintWriter.println()</code> / <code>BufferedReader.readLine()</code>, while file payloads move via
+                <code>OutputStream.write()</code> / <code>InputStream.readNBytes()</code>.
+            </p>
+        </section>
+
+        <section class="section" id="index">
+            <h2>3. Index Lifecycle</h2>
+            <p>
+                The controller’s index tracks each file’s replicas and lifecycle state. Operations transition files through
+                <em>store in progress → store complete → remove in progress → remove complete</em>, ensuring that conflicting
+                requests are blocked or rejected appropriately. Only files marked “store complete” are surfaced to clients.
+            </p>
+        </section>
+
+        <section class="section" id="development">
+            <h2>4. Code Development &amp; Operations</h2>
+            <h3>Runtime Parameters</h3>
+            <pre><code>Controller: java Controller cport R timeout rebalance_period
+Dstore:      java Dstore port cport timeout file_folder
+Client:      java Client cport timeout</code></pre>
+            <p>
+                All components run on Linux/Unix with OpenJDK 21. Controller and Dstores are stateless between runs; Dstores
+                clear their local folders on startup. Timeouts guard cross-process messaging (e.g., waiting for <code>STORE_ACK</code>).
+            </p>
+            <h3>Store Flow</h3>
+            <ul>
+                <li>Client requests <code>STORE filename filesize</code> → controller marks “store in progress”.</li>
+                <li>Controller assigns R Dstores and returns <code>STORE_TO ...</code>.</li>
+                <li>Client streams data to each Dstore; Dstores acknowledge with <code>STORE_ACK</code>.</li>
+                <li>Upon all ACKs, controller sets state to “store complete” and responds <code>STORE_COMPLETE</code>.</li>
+            </ul>
+            <p>
+                Failure handling covers insufficient Dstores, duplicate filenames, and missing ACKs (in which case the partial
+                entry is rolled back).
+            </p>
+            <h3>Load Flow</h3>
+            <ul>
+                <li>Client sends <code>LOAD filename</code>; controller selects an available replica and returns <code>LOAD_FROM</code>.</li>
+                <li>Client fetches data directly from the Dstore.</li>
+                <li>If needed, the client issues <code>RELOAD</code> until an alternative replica responds; otherwise <code>ERROR_LOAD</code> is returned.</li>
+            </ul>
+            <h3>Remove Flow</h3>
+            <ul>
+                <li>Controller marks “remove in progress”, instructs each replica <code>REMOVE filename</code>.</li>
+                <li>Dstores reply <code>REMOVE_ACK</code>; controller deletes the index entry when all ACKs arrive.</li>
+            </ul>
+        </section>
+
+        <section class="section" id="rebalance">
+            <h2>5. Rebalance</h2>
+            <p>
+                The controller periodically (or upon Dstore join) requests inventory from each Dstore, computes new placements,
+                and issues <code>REBALANCE</code> commands describing which files to replicate or drop. Dstores transfer data via
+                <code>REBALANCE_STORE</code> / <code>ACK</code> exchanges and signal completion with <code>REBALANCE_COMPLETE</code>.
+                The controller queues client operations during rebalancing and guarantees at most one rebalance in flight.
+            </p>
+        </section>
+
+        <section class="section" id="concurrency">
+            <h2>6. Concurrent Operations</h2>
+            <ul>
+                <li><strong>Store vs. Store:</strong> reject duplicates with <code>ERROR_FILE_ALREADY_EXISTS</code>.</li>
+                <li><strong>Store vs. Load/Remove/List:</strong> treat in-progress stores as nonexistent until complete.</li>
+                <li><strong>Remove clashes:</strong> new Store/Load/List operations return <code>ERROR</code> while removal is in progress.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

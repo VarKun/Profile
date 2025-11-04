@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TETRECS Multiplayer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: radial-gradient(circle at top, #0b1020, #141c34 50%, #070a13 100%);
+            --fg: #e8ecff;
+            --muted: #99a5d6;
+            --accent: #5f9cff;
+            --card: rgba(21, 26, 48, 0.82);
+            --border: rgba(127, 161, 255, 0.22);
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.65;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(2.2rem, 4vw, 4rem) clamp(1.4rem, 4vw, 3.4rem);
+        }
+        header {
+            width: 100%;
+            max-width: 1080px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 2.2rem;
+        }
+        header h1 {
+            margin: 0 0 0.6rem;
+            font-size: clamp(2.4rem, 4vw, 3.2rem);
+        }
+        header p {
+            margin: 0.4rem auto 0;
+            max-width: 720px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(95, 156, 255, 0.35);
+            background: rgba(11, 16, 33, 0.85);
+            color: var(--muted);
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .back-link:hover {
+            transform: translateX(-4px);
+            border-color: rgba(95, 156, 255, 0.65);
+            box-shadow: 0 12px 26px rgba(95, 156, 255, 0.35);
+        }
+        main {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.4rem;
+        }
+        section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: clamp(1.8rem, 3.4vw, 2.6rem);
+            box-shadow: 0 24px 60px rgba(5, 10, 24, 0.45);
+        }
+        h2 {
+            margin: 0 0 1rem;
+            font-size: clamp(1.5rem, 2.4vw, 2rem);
+        }
+        p {
+            margin: 0.7rem 0 1rem;
+            font-size: 1rem;
+        }
+        ul {
+            margin: 0.6rem 0 0;
+            padding-left: 1.3rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+        figure {
+            background: rgba(15, 22, 40, 0.85);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(127, 161, 255, 0.18);
+            box-shadow: 0 16px 40px rgba(5, 10, 24, 0.35);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        figure img {
+            width: 100%;
+            display: block;
+        }
+        figcaption {
+            padding: 0.85rem 1.05rem 1.1rem;
+            font-size: 0.92rem;
+            color: rgba(224, 232, 255, 0.75);
+        }
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(95, 156, 255, 0.4);
+            color: var(--fg);
+            text-decoration: none;
+            background: rgba(95, 156, 255, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+            border-color: rgba(95, 156, 255, 0.75);
+            box-shadow: 0 10px 28px rgba(95, 156, 255, 0.35);
+        }
+        @media (max-width: 720px) {
+            header {
+                text-align: left;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <h1>TETRECS Multiplayer</h1>
+        <p>
+            A JavaFX tribute to the arcade classic that lets you practice solo runs or battle friends in real time with lobbies,
+            live chat, and incoming garbage lines. Smooth controls, responsive UI, and a social layer make the game shine.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Gameplay Highlights</h2>
+            <p>
+                The single-player mode nails the fundamentals—precise rotation, quick-drop, and a satisfying scoreboard for chasing PBs.
+                Multiplayer adds a live party lobby with chat, spectator support, and a shared queue so groups can launch matches instantly.
+            </p>
+            <ul>
+                <li>Built end-to-end in Java, leveraging JavaFX for the UI, animation loop, and responsive controller mapping.</li>
+                <li>Realtime networking layer keeps board states in sync while players trash-talk through the in-game chat.</li>
+                <li>Custom theming, onboarding tips, and control rebinding keep the experience friendly for newcomers.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Gallery</h2>
+            <div class="media-grid">
+                <figure>
+                    <img src="assets/capstone/tetrecs.png" alt="TETRECS title screen with menu options">
+                    <figcaption>Landing screen with quick-start options and party lobby access.</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/capstone/tetrecs_game.png" alt="Single-player TETRECS gameplay board">
+                    <figcaption>Single-player marathon mode with responsive controls and real-time scoring.</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/capstone/tetrecs_instructions.png" alt="TETRECS multiplayer instructions UI">
+                    <figcaption>Multiplayer instructions showing chat, garbage preview, and party controls.</figcaption>
+                </figure>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Application Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: linear-gradient(160deg, #f5f7ff, #edf2ff 45%, #ffffff);
+            --fg: #1f2933;
+            --muted: #4f5d75;
+            --accent: #2f6fed;
+            --panel-bg: rgba(255, 255, 255, 0.86);
+            --border: rgba(47, 111, 237, 0.12);
+        }
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.75;
+            margin: 0;
+            padding: clamp(2rem, 4vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #1b2a4b;
+            margin-top: 2.2rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: clamp(2.2rem, 3.4vw, 3rem);
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+        }
+        h3 {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            margin-top: 1.8rem;
+        }
+        p {
+            margin: 1rem 0;
+            font-size: 1.02rem;
+        }
+        ul {
+            margin: 0.5rem 0 0;
+            padding-left: 1.4rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .hero {
+            position: relative;
+            max-width: 880px;
+            width: 100%;
+            text-align: center;
+            margin: 0 auto 2.2rem;
+        }
+        .media-wrapper {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto 1.8rem;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 18px 48px rgba(15, 73, 181, 0.2);
+            background: rgba(12, 32, 87, 0.35);
+        }
+        .hero-video {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            background: #0f172a;
+        }
+        .hero p {
+            color: var(--muted);
+            font-size: 1.05rem;
+            margin: 0.5rem auto 0;
+        }
+        .content {
+            width: 100%;
+            max-width: 960px;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+        }
+        .section {
+            background: var(--panel-bg);
+            backdrop-filter: blur(24px);
+            border-radius: 22px;
+            padding: clamp(1.8rem, 3vw, 2.6rem);
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 48px rgba(15, 73, 181, 0.16);
+            text-align: center;
+        }
+        .section p,
+        .section ul {
+            text-align: left;
+        }
+        .section ul {
+            list-style: disc;
+            padding-left: 1.4rem;
+        }
+        .section ul ul {
+            list-style: circle;
+            margin-top: 0.35rem;
+            padding-left: 1.2rem;
+        }
+        .section strong {
+            color: #1b2a4b;
+        }
+        .image-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.4rem;
+            align-items: start;
+        }
+        .image-row figure {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(15, 73, 181, 0.12);
+        }
+        .image-row img {
+            width: 100%;
+            flex: 1 1 auto;
+            display: block;
+            object-fit: cover;
+        }
+        .image-row figcaption {
+            padding: 0.9rem 1.1rem 1.2rem;
+            font-size: 0.95rem;
+            color: var(--muted);
+            text-align: left;
+        }
+        .back-link {
+            position: absolute;
+            top: -18px;
+            left: 0;
+            font-size: 0.95rem;
+            color: var(--muted);
+            text-decoration: none;
+            border: 1px solid rgba(79, 93, 117, 0.35);
+            border-radius: 999px;
+            padding: 6px 14px;
+            transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .back-link:hover {
+            color: var(--accent);
+            border-color: rgba(47, 111, 237, 0.55);
+            transform: translateX(-4px);
+        }
+        .subsection h3 {
+            margin-top: 1.6rem;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 2.5rem 1.4rem 3rem;
+            }
+            .hero {
+                text-align: left;
+            }
+            .section {
+                text-align: left;
+            }
+            .media-wrapper {
+                margin: 0 auto 1.4rem;
+                border-radius: 18px;
+            }
+            .image-row {
+                grid-template-columns: 1fr;
+            }
+            .back-link {
+                left: auto;
+                right: 0;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="media-wrapper">
+        <video class="hero-video" src="assets/capstone/cloud_app_demo.mp4" controls preload="metadata" poster="assets/capstone/cloud_app_poster.png">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <header class="hero">
+        <a class="back-link" href="solar_system_cinematic_fixed.html">⟵ Back</a>
+        <h1>Cloud Application Development</h1>
+        <p>
+            CloudScholar transforms lecture media into structured study material with an Azure-powered backend, a Vue.js frontend,
+            and AI-generated learning aids that help students retain knowledge.
+        </p>
+    </header>
+
+    <main class="content">
+        <section class="section" id="gallery">
+            <h2>Interface Highlights</h2>
+            <div class="image-row">
+                <figure>
+                    <img src="assets/capstone/cloud_app_screen_left.png" alt="CloudScholar lecture upload interface">
+                    <figcaption>Lecture ingestion workflow with transcript upload and AI processing status.</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/capstone/cloud_app_screen_right.png" alt="CloudScholar study dashboard with flashcards">
+                    <figcaption>Study dashboard showing generated flashcards, quizzes, and progress tracking.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section" id="functionality">
+            <h2>1. Description of Prototype Functionality</h2>
+            <p>
+                <strong>CloudScholar</strong> is a cloud-based platform designed to transform lecture recordings or transcripts into
+                powerful study tools, addressing common challenges faced by students such as fast-paced lectures, inefficient
+                note-taking, and the lack of personalised study aids. By integrating advanced features, CloudScholar provides
+                students with an efficient and user-friendly way to manage and optimise their learning process.
+            </p>
+            <p>
+                The platform offers seamless and secure user management. New users can easily register by creating unique
+                accounts with essential credentials. Once registered, they can log in to access the platform, ensuring a
+                personalised and secure experience. Users can update their account information, including usernames and
+                passwords, whenever necessary to maintain accuracy and security. Additionally, a logout function enables users
+                to safely end their sessions, protecting their personal information.
+            </p>
+            <p>
+                Once logged in, users can explore and access a variety of notes, including viewing their private notes or
+                searching for other public notes by entering keywords or lecture titles, making navigation seamless and
+                efficient.
+            </p>
+            <p>
+                One of CloudScholar’s standout functionalities is its ability to auto-generate structured notes from lecture
+                recordings. Users can create lectures by uploading lecture transcripts, and WAV files, or recording lectures in
+                real time. The application processes this input to create concise, summarised notes, highlighting key points and
+                organising the content effectively. Users can edit their notes at any time for better organisation and
+                customisation, with the option to store them publicly or privately. These notes are securely stored in the
+                database and are accessible only to registered users.
+            </p>
+            <p>
+                Building upon these notes, CloudScholar generates flashcards designed to enhance active learning and memory
+                retention. These flashcards are accessible at any time and are available for export, enabling users to review and
+                reinforce their understanding of the lecture material.
+            </p>
+            <p>
+                To deepen the learning experience further, CloudScholar allows users to take unique quizzes that are generated
+                based on flashcards, providing a dynamic and interactive way for users to test their knowledge and improve
+                comprehension. Each quiz is timed and questions are newly created every time a quiz is attempted, ensuring that
+                no two quizzes are alike to prevent rote memorization and encourage a deeper understanding of the material. Users
+                are free to navigate between questions during the quiz. After taking the quiz, users can view their quiz results
+                and scores to assess their performance and identify improvement areas. Users would have the option to save quiz
+                reports for future reference. Quiz scores are stored in the database and the latest score will be displayed. For
+                public lectures, the scores of all attempted users are displayed on leaderboards and podiums, fostering a
+                competitive and collaborative learning environment.
+            </p>
+            <p>
+                The COSMOS database securely stores all user accounts and lecture-related data. This includes lecture titles,
+                generated notes, flashcards, tags and quiz scores, ensuring that all user data is well-organised and easily
+                retrievable.
+            </p>
+            <p>
+                By integrating these features, CloudScholar empowers students to transform their learning experience, fostering
+                better comprehension, retention, and academic success.
+            </p>
+        </section>
+
+        <section class="section" id="design">
+            <h2>2. Brief Overview of Design and Implementation</h2>
+            <p>
+                In our prototype, the frontend and backend have been designed as independent components to maintain a clear
+                separation of responsibilities.
+            </p>
+            <div class="subsection">
+                <h3>2.1 Frontend</h3>
+                <p>
+                    Our frontend is developed as a responsive web application using Vue.js. We decided to use Vue CLI due to its
+                    simplicity and flexibility, which allowed us to structure into distinct directories, including components,
+                    views, routers, stores, and assets. The components folder contains reusable elements such as the navigation bar
+                    for easy reuse. The application is organised into multiple pages which are stored in the views folder. The
+                    application’s main pages include:
+                </p>
+                <ul>
+                    <li>Welcome Page: First page visited, includes options to Register or Login.</li>
+                    <li>Register Page: Allows users to register and automatically log into the application.the</li>
+                    <li>Login Page: Allows users to log into the application.</li>
+                    <li>Main Page: Provide option to create lecture, access to view recent/popular/private lectures and search for public lectures using keywords.</li>
+                    <li>Lecture Note Page: users can view and edit selected lecture notes, or select options to view flashcards, take a quiz, or view the lecture’s leaderboard.</li>
+                    <li>Flashcards Page: To view flashcards one by one.</li>
+                    <li>Quiz Page: To take a quiz on the lecture.</li>
+                    <li>Leaderboard Page: To view the score of other users or your latest score.</li>
+                </ul>
+                <p>
+                    Routing was managed through the router/index.js file, where we defined paths for navigation between views. State
+                    management was centralised using Vuex, with the store/index.js file facilitating global state sharing and
+                    maintaining consistency across components.
+                </p>
+            </div>
+
+            <div class="subsection">
+                <h3>2.2 Backend</h3>
+                <p>
+                    The backend is an Azure function app, where the functions are called through an API. The functions in the
+                    backend allow for access to the Azure services that are required for CloudScholar. The services are as follows:
+                </p>
+                <ul>
+                    <li><strong>COSMOSDB:</strong>
+                        <ul>
+                            <li>Registering a new account, if valid, will add the details to the database.</li>
+                            <li>Logging in will check in the database if the credentials are correct.</li>
+                            <li>Newly created lectures and all it’s contents are added to the database.</li>
+                        </ul>
+                    </li>
+                    <li><strong>OPEN AI:</strong>
+                        <ul>
+                            <li>Generates the initial notes from the imported transcripts.</li>
+                            <li>Generates the flashcards from the notes.</li>
+                            <li>Generates the quiz derived from the notes.</li>
+                        </ul>
+                    </li>
+                    <li><strong>AZURE SPEECH:</strong>
+                        <ul>
+                            <li>Responsible for converting the WAV file to the transcript to generate notes from the recorded transcripts.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>
+                    These services combine to store credentials, maintain lecture data, and deliver AI-generated study aids through a
+                    secure, scalable architecture.
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

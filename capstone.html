@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .metric-card canvas {
+            background: transparent;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+            font-size: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .container {
+            max-width: 1170px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-link:hover {
+            color: #357abd;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 1rem 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .authors {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .institution {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Section divider lines */
+        .section-divider {
+            width: 100%;
+            height: 3px;
+            margin: 0;
+            border-radius: 2px;
+        }
+
+        .divider-blue {
+            background: linear-gradient(90deg, #4a90e2 0%, #5aa3f0 100%);
+        }
+
+        .divider-purple {
+            background: linear-gradient(90deg, #9b59b6 0%, #bb6bd9 100%);
+        }
+
+        .divider-green {
+            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .divider-orange {
+            background: linear-gradient(90deg, #e67e22 0%, #f39c12 100%);
+        }
+
+        /* Abstract */
+        .abstract-content {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            text-align: justify;
+            color: #444;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* Approach - Architecture Figures */
+        .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .approach-item {
+            background: #fafafa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .approach-img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .approach-item:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .approach-item:hover .approach-img {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 1000;
+        }
+
+        .image-modal.is-visible {
+            display: flex;
+        }
+
+        .image-modal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: none;
+            font-size: 1.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Results layout */
+        .results-tables {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            font-size: 0.8rem;
+        }
+
+        .results-table caption {
+            font-weight: 600;
+            text-align: center;
+            padding: 0.75rem;
+            background: #f4f6f8;
+            color: #333;
+        }
+
+        .results-table thead {
+            background: #f4f6f8;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 0.65rem 0.9rem;
+            text-align: center;
+            border-bottom: 1px solid #e6e9ed;
+        }
+
+        .results-table th:first-child,
+        .results-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .results-table small {
+            display: inline-block;
+            color: #666;
+        }
+
+        .row-highlight {
+            background: rgba(31, 75, 216, 0.08);
+        }
+
+        .metric-highlight {
+            font-weight: 700;
+            color: #1f4bd8;
+        }
+
+        .metric-highlight small {
+            color: inherit;
+        }
+
+        .results-legend {
+            text-align: center;
+            color: #777;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .results-callout {
+            max-width: 900px;
+            margin: 1.5rem auto 2rem;
+            background: #f1f5ff;
+            border-left: 4px solid #2f6bff;
+            padding: 1.1rem 1.4rem;
+            color: #1b2554;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            box-shadow: 0 10px 30px rgba(47, 107, 255, 0.08);
+        }
+
+        .results-callout strong {
+            color: #133ab3;
+        }
+
+        /* Metric insight panel */
+        .metric-insight {
+            margin: 4rem auto;
+            background: transparent;
+            color: #1c1f26;
+            border-radius: 18px;
+            padding: 2.4rem 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        .metric-insight h2 {
+            font-size: 1.9rem;
+            margin-bottom: 1.1rem;
+            color: #1d3aa9;
+        }
+
+        .metric-insight p {
+            color: #364152;
+            margin-bottom: 0.9rem;
+        }
+
+        .metric-intro {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+
+        .metric-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            border: 1px solid #d0d7e6;
+            font-size: 0.75rem;
+            color: #344054;
+            background: #eef2ff;
+            margin: 0 0.25rem;
+        }
+
+        .metric-note {
+            font-size: 0.82rem;
+            color: #6b7280;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .metric-formula {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #1c1f26;
+            margin-bottom: 1.1rem;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.8rem;
+        }
+
+        .metric-card {
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            padding: 1.35rem;
+            box-shadow: none;
+        }
+
+        .metric-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.85rem;
+            color: #1d3aa9;
+        }
+
+        .metric-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            color: #1c1f26;
+            background: transparent;
+        }
+
+        .metric-table th,
+        .metric-table td {
+            padding: 0.6rem 0.85rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+            text-align: left;
+            background: transparent;
+        }
+
+        .metric-table th {
+            color: #475467;
+        }
+
+        @media (max-width: 768px) {
+            .metric-insight {
+                padding: 2rem 0;
+            }
+
+            .metric-intro {
+                font-size: 0.98rem;
+            }
+        }
+
+        .results-caption {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            color: #4b5563;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .results-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            align-items: center;
+        }
+
+        .results-images img {
+            width: 100%;
+            display: block;
+            border-radius: 6px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+        }
+
+        /* Visual Results - GIF gallery */
+        .visual-gifs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+        }
+
+        .visual-gif {
+            text-align: center;
+        }
+
+        .visual-gif img,
+        .visual-gif video {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 6px 22px rgba(15, 23, 42, 0.12);
+            background: #0f172a;
+        }
+
+        .visual-gif figcaption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: #596273;
+            line-height: 1.55;
+        }
+
+        /* Links */
+        .links-section {
+            text-align: center;
+            margin-top: 5rem;
+            padding: 3rem 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .link-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        .link-button:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .approach-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-tables {
+                grid-template-columns: 1fr;
+            }
+
+            .results-images {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .visual-gifs {
+                grid-template-columns: 1fr;
+            }
+
+            .link-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <a href="solar_system_cinematic_fixed.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <h1 class="title">Generative Adversarial Network for
+            Human Action Generation</h1>
+            <p class="subtitle">Undergraduate Thesis</p>
+        </header>
+
+        <!-- Abstract Section -->
+        <section class="section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">Abstract</h2>
+                <div class="section-divider divider-blue"></div>
+            </div>
+            <div class="abstract-content">
+                <p>
+                Text-to-action generation leverages natural language processing to interpret instructions and map them to relevant motion sequences. Interest in this topic has surged, yet producing natural, coherent motion from free-form descriptions remains difficult. This project addresses the challenge with a hybrid GAN architecture that combines Spatial-Temporal Graph Convolutional Networks (ST-GCNs) and dynamic spatial-temporal Transformers (DST-Transformer). The model pursues realistic motion that stays aligned with the prompt. We review the broader context and prior work, underscoring issues such as preserving motion dynamics and maintaining semantic fidelity. The system integrates a multi-layer ST-GCN generator and discriminator with Transformer modules for global reasoning, along with a multi-scale sampling strategy across joints and time. We describe implementation details and training workflow—including dataset preparation and hyperparameter choices—and evaluate several models on the CoSpeech dataset. The experiments highlight strengths, expose limitations, and suggest directions for future improvements.
+                </p>
+            </div>
+        </section>
+
+        <!-- Approach Section -->
+        <section class="section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">Approach</h2>
+                <div class="section-divider divider-purple"></div>
+            </div>
+            <div class="approach-grid">
+                <figure class="approach-item">
+                    <img id="approach1" src="assets/capstone/approach1.png" alt="Generator network architecture diagram" class="approach-img">
+                </figure>
+
+                <figure class="approach-item">
+                    <img id="approach2" src="assets/capstone/approach2.png" alt="Discriminator network architecture diagram" class="approach-img">
+                </figure>
+
+                <figure class="approach-item">
+                    <img id="approach3" src="assets/capstone/approach3.png" alt="End-to-end system workflow diagram" class="approach-img">
+                </figure>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">Results</h2>
+                <div class="section-divider divider-green"></div>
+            </div>
+            <div class="results-tables">
+                <table class="results-table">
+                    <caption>ST-GCN Variants</caption>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>FGD (feat) ↓</th>
+                            <th>FGD (raw) ↓</th>
+                            <th>APE ↓</th>
+                            <th>AA →</th>
+                            <th>AJ →</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ST-GCN 1</td>
+                            <td>37.670</td>
+                            <td>37.428</td>
+                            <td>0.5556</td>
+                            <td>131.96<small>&plusmn;75.58</small></td>
+                            <td>66.38<small>&plusmn;37.98</small></td>
+                        </tr>
+                        <tr>
+                            <td>ST-GCN 2</td>
+                            <td><span class="metric-highlight">26.959</span></td>
+                            <td><span class="metric-highlight">28.827</span></td>
+                            <td>0.5541</td>
+                            <td>106.70<small>&plusmn;81.81</small></td>
+                            <td>52.47<small>&plusmn;40.25</small></td>
+                        </tr>
+                        <tr>
+                            <td>ST-GCN 3</td>
+                            <td>109.466</td>
+                            <td>88.300</td>
+                            <td>0.5137</td>
+                            <td><span class="metric-highlight">80.93<small>&plusmn;4.61</small></span></td>
+                            <td><span class="metric-highlight">43.96<small>&plusmn;2.67</small></span></td>
+                        </tr>
+                        <tr>
+                            <td>Real Data (ref.)</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>74.46<small>&plusmn;54.87</small></td>
+                            <td>33.98<small>&plusmn;25.33</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="results-table">
+                    <caption>CNN Variants</caption>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>FGD (feat) ↓</th>
+                            <th>FGD (raw) ↓</th>
+                            <th>APE ↓</th>
+                            <th>AA →</th>
+                            <th>AJ →</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CNN 1</td>
+                            <td><span class="metric-highlight">17.61</span></td>
+                            <td><span class="metric-highlight">28.25</span></td>
+                            <td>0.2149</td>
+                            <td>232.68<small>&plusmn;34.83</small></td>
+                            <td>121.95<small>&plusmn;19.22</small></td>
+                        </tr>
+                        <tr>
+                            <td>CNN 2</td>
+                            <td>24.89</td>
+                            <td>35.51</td>
+                            <td><span class="metric-highlight">0.2059</span></td>
+                            <td><span class="metric-highlight">212.52<small>&plusmn;22.26</small></span></td>
+                            <td><span class="metric-highlight">114.82<small>&plusmn;12.29</small></span></td>
+                        </tr>
+                        <tr>
+                            <td>Real Data (ref.)</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>74.46<small>&plusmn;54.87</small></td>
+                            <td>33.98<small>&plusmn;25.33</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="results-table">
+                    <caption>DSTFormer Variants</caption>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>FGD (feat) ↓</th>
+                            <th>FGD (raw) ↓</th>
+                            <th>APE ↓</th>
+                            <th>AA →</th>
+                            <th>AJ →</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DSTFormer 1</td>
+                            <td><span class="metric-highlight">20.972</span></td>
+                            <td><span class="metric-highlight">27.595</span></td>
+                            <td>0.5019</td>
+                            <td>176.09<small>&plusmn;82.87</small></td>
+                            <td>84.64<small>&plusmn;30.00</small></td>
+                        </tr>
+                        <tr>
+                            <td>DSTFormer 2</td>
+                            <td>25.211</td>
+                            <td>28.090</td>
+                            <td>0.5045</td>
+                            <td>89.02<small>&plusmn;46.16</small></td>
+                            <td>45.27<small>&plusmn;23.39</small></td>
+                        </tr>
+                        <tr class="row-highlight">
+                            <td>DSTFormer 3</td>
+                            <td>46.932</td>
+                            <td>51.382</td>
+                            <td><span class="metric-highlight">0.4804</span></td>
+                            <td><span class="metric-highlight">78.79<small>&plusmn;18.95</small></span></td>
+                            <td><span class="metric-highlight">38.19<small>&plusmn;9.56</small></span></td>
+                        </tr>
+                        <tr>
+                            <td>DSTFormer 4</td>
+                            <td>37.229</td>
+                            <td>49.899</td>
+                            <td>0.4880</td>
+                            <td>80.83<small>&plusmn;30.50</small></td>
+                            <td>40.33<small>&plusmn;15.90</small></td>
+                        </tr>
+                        <tr>
+                            <td>Real Data (ref.)</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>74.46<small>&plusmn;54.87</small></td>
+                            <td>33.98<small>&plusmn;25.33</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="results-table">
+                    <caption>Model Comparison</caption>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>FGD (feat) ↓</th>
+                            <th>FGD (raw) ↓</th>
+                            <th>APE ↓</th>
+                            <th>AA →</th>
+                            <th>AJ →</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CNN 2</td>
+                            <td><span class="metric-highlight">24.89</span></td>
+                            <td><span class="metric-highlight">35.51</span></td>
+                            <td><span class="metric-highlight">0.2059</span></td>
+                            <td>212.52<small>&plusmn;22.26</small></span></td>
+                            <td>114.82<small>&plusmn;12.29</small></span></td>
+                        </tr>
+                        <tr>
+                            <td>ST-GCN 3</td>
+                            <td>109.466</td>
+                            <td>88.300</td>
+                            <td>0.5137</td>
+                            <td>80.93<small>&plusmn;4.61</small></td>
+                            <td>43.96<small>&plusmn;2.67</small></td>
+                        </tr>
+                        <tr class="row-highlight">
+                            <td>DSTFormer 3</td>
+                            <td>46.932</td>
+                            <td>51.382</td>
+                            <td>0.4804</td>
+                            <td><span class="metric-highlight">78.79<small>&plusmn;18.95</small></span></td>
+                            <td><span class="metric-highlight">38.19<small>&plusmn;9.56</small></span></td>
+                        </tr>
+                        <tr>
+                            <td>Real Data (ref.)</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>74.46<small>&plusmn;54.87</small></td>
+                            <td>33.98<small>&plusmn;25.33</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="results-callout">
+                <strong>DSTFormer 3 holds up in real-world use.</strong> Although CNN 2 records the lowest FGD and APE values, its generated sequences collapse into unstable limb poses and physically implausible motion, so it cannot be deployed directly. DSTFormer 3 stays close to the statistics of real motion and delivers smooth, coherent transitions in qualitative reviews, clearly outperforming the CNN baselines. We therefore adopt DSTFormer as the backbone to balance objective metrics with perceived quality.
+            </div>
+
+            <p class="results-legend">Arrows indicate optimization direction: ↓ lower is better, → closer to real data is better.</p>
+        </section>
+
+        <!-- Metric Insight Section -->
+        <section class="metric-insight fade-in" id="metricInsight">
+            <h2>Why the “best” CNN score is misleading</h2>
+            <p class="metric-intro">
+                APE and FGD emphasize positional and distribution errors, but they barely react to kinematic
+                cues such as velocity and acceleration. Even though the CNN drives
+                <span class="metric-badge">APE/FGD</span> very low, its motions drift far from the physics of real sequences.
+                We introduce the <strong>Reality Gap</strong>—the z-score distance of AA/AJ from the real-data statistics—to capture that mismatch.
+            </p>
+            <p class="metric-formula">Reality Gap = |AA − AA<sub>real</sub>| / σ<sub>AA</sub> + |AJ − AJ<sub>real</sub>| / σ<sub>AJ</sub> (lower is better).</p>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h3>Reality Gap (lower is better)</h3>
+                    <canvas id="gapChart" height="220"></canvas>
+                </div>
+                <div class="metric-card">
+                    <h3>APE (lower is better)</h3>
+                    <canvas id="apeChart" height="220"></canvas>
+                </div>
+                <div class="metric-card">
+                    <h3>FGD (feat) (lower is better)</h3>
+                    <canvas id="fgdChart" height="220"></canvas>
+                </div>
+            </div>
+
+            <div class="metric-card" style="margin-top: 1.5rem;">
+                <h3>Key Numbers</h3>
+                <table class="metric-table" id="metricTable"></table>
+                <p class="metric-note">Reference (ground truth): AA = 74.46 ± 54.87, AJ = 33.98 ± 25.33.</p>
+            </div>
+        </section>
+
+        <div class="results-images">
+            <img src="assets/capstone/result_visual_left.png" alt="Generated motion visualization A">
+            <img src="assets/capstone/result_visual_right.png" alt="Generated motion visualization B">
+        </div>
+        <p class="results-caption">
+            The CNN sequences exhibit noticeable pose discontinuities and unrealistic joint velocities (see panels),
+            whereas DSTFormer maintains the tempo and amplitude of real motion. The visuals reiterate that “better metrics ≠ usable motion”,
+            leaving the CNN architecture unsuitable for practical deployment.
+        </p>
+
+        <!-- Visual Results Section -->
+        <section class="section fade-in">
+            <div class="section-header">
+                <h2 class="section-title">Visual Results</h2>
+                <div class="section-divider divider-orange"></div>
+            </div>
+            <div class="visual-gifs">
+                <figure class="visual-gif">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/capstone/motion_sample1.mp4" type="video/mp4">
+                        Your browser does not support MP4 playback.
+                    </video>
+                    <figcaption>A chef prepares stir-fry in a busy kitchen, keeping steady control over the wok.</figcaption>
+                </figure>
+                <figure class="visual-gif">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/capstone/motion_sample2.mp4" type="video/mp4">
+                        Your browser does not support MP4 playback.
+                    </video>
+                    <figcaption>A narrator gestures passionately while debating with an audience.</figcaption>
+                </figure>
+                <figure class="visual-gif">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/capstone/motion_sample3.mp4" type="video/mp4">
+                        Your browser does not support MP4 playback.
+                    </video>
+                    <figcaption>A woman works through a midday cooking session.</figcaption>
+                </figure>
+                <figure class="visual-gif">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/capstone/motion_sample4.mp4" type="video/mp4">
+                        Your browser does not support MP4 playback.
+                    </video>
+                    <figcaption>A female performer sings on stage..</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- Links -->
+        <div class="links-section fade-in">
+            <div class="link-buttons">
+                <a href="reports/capstone-report.pdf" class="link-button" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                    Paper (PDF)
+                </a>
+                <a href="https://github.com/yourusername/project" class="link-button" target="_blank">
+                    <i class="fab fa-github"></i>
+                    Code (GitHub)
+                </a>
+                <a href="https://arxiv.org/abs/xxxx.xxxxx" class="link-button" target="_blank">
+                    <i class="fas fa-link"></i>
+                    arXiv
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 Capstone Project | All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div class="image-modal" id="imageModal" aria-hidden="true">
+        <button class="modal-close" id="modalClose" aria-label="Close image">&times;</button>
+        <img id="modalImage" src="" alt="Enlarged image preview">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const realAA = 74.46;
+        const realAJ = 33.98;
+        const sdAA = 54.87;
+        const sdAJ = 25.33;
+
+        const metricRows = [
+            { name: 'CNN 2', APE: 0.2059, FGD: 24.89, AA: 212.52, AJ: 114.82 },
+            { name: 'ST-GCN 3', APE: 0.5137, FGD: 109.466, AA: 80.93, AJ: 43.96 },
+            { name: 'DSTFormer 3', APE: 0.4804, FGD: 46.932, AA: 78.79, AJ: 38.19 }
+        ];
+
+        metricRows.forEach(row => {
+            const zAA = Math.abs(row.AA - realAA) / sdAA;
+            const zAJ = Math.abs(row.AJ - realAJ) / sdAJ;
+            row.gap = zAA + zAJ;
+            row.zAA = zAA;
+            row.zAJ = zAJ;
+        });
+
+        const metricTable = document.getElementById('metricTable');
+        if (metricTable) {
+            metricTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>APE</th>
+                        <th>FGD (feat)</th>
+                        <th>AA</th>
+                        <th>AJ</th>
+                        <th>z(AA)</th>
+                        <th>z(AJ)</th>
+                        <th><strong>Reality Gap</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${metricRows.map(row => {
+                        const gapValue = row.gap.toFixed(2);
+                        const formattedGap = row.name === 'DSTFormer 3'
+                            ? `<span class="metric-highlight">${gapValue}</span>`
+                            : gapValue;
+                        return `
+                            <tr>
+                                <td>${row.name}</td>
+                                <td>${row.APE.toFixed(4)}</td>
+                                <td>${row.FGD.toFixed(3)}</td>
+                                <td>${row.AA.toFixed(2)}</td>
+                                <td>${row.AJ.toFixed(2)}</td>
+                                <td>${row.zAA.toFixed(2)}</td>
+                                <td>${row.zAJ.toFixed(2)}</td>
+                                <td><strong>${formattedGap}</strong></td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            `;
+        }
+
+        const chartLabels = metricRows.map(row => row.name);
+
+        function createBarChart(canvasId, label, data, color = '#6aa9ff') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label,
+                        data,
+                        backgroundColor: color
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#e5e7eb' },
+                            ticks: { color: '#4b5563' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#4b5563' }
+                        }
+                    }
+                }
+            });
+        }
+
+        createBarChart('gapChart', 'Reality Gap', metricRows.map(row => row.gap), '#6aa9ff');
+        createBarChart('apeChart', 'APE', metricRows.map(row => row.APE), '#f97316');
+        createBarChart('fgdChart', 'FGD (feat)', metricRows.map(row => row.FGD), '#22d3ee');
+    </script>
+
+    <script>
+        // Approach image modal preview
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalClose = document.getElementById('modalClose');
+        const approachImages = document.querySelectorAll('.approach-img');
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.remove('is-visible');
+            modal.setAttribute('aria-hidden', 'true');
+            if (modalImage) {
+                modalImage.src = '';
+            }
+        }
+
+        if (modal && modalImage && modalClose) {
+            approachImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    modalImage.src = img.src;
+            modalImage.alt = img.alt || 'Enlarged image preview';
+                    modal.classList.add('is-visible');
+                    modal.setAttribute('aria-hidden', 'false');
+                });
+            });
+
+            modalClose.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
