@@ -41,6 +41,19 @@ Update `PROJECT_TIMELINE` in `realistic_solar_cinematic_fixed.js` to add, remove
 
 Push the repository to GitHub and enable GitHub Pages for instant hosting. Ensure that the `assets/` directory travels with the build so texture lookups succeed in production.
 
+To point GitHub Pages at this project:
+
+1. Open your repository on GitHub and go to **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+3. Choose the `main` branch and the `/ (root)` folder, then click **Save**.
+4. Wait for the Pages deployment workflow to finish (a check mark will appear near the latest commit once complete).
+
+After GitHub finishes the deployment, your live portfolio will be available at:
+
+[`https://<your-username>.github.io/<repository-name>/profile/solar_system_cinematic_fixed.html`](https://<your-username>.github.io/<repository-name>/profile/solar_system_cinematic_fixed.html)
+
+Replace `<your-username>` and `<repository-name>` with your actual GitHub account and repository name, then share that link so visitors can open the complete interactive portfolio in their browser.
+
 ### Credits and License
 
 High-resolution planetary textures come from Solar System Scope and Three.js demos; observe their reuse policies. Add an explicit license file when you decide how you want others to use this work.
