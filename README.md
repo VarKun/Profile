@@ -3,7 +3,7 @@
 
 ## Overview (English)
 
-This repository contains an interactive, Three.js-powered solar system that doubles as a personal coursework portfolio. Each planet links to a dedicated project page with narrative write-ups, visualizations, and supporting assets. The site is designed for static hosting (for example, GitHub Pages).
+This repository contains an interactive, Three.js-powered solar system that doubles as a personal coursework portfolio. Each planet links to a dedicated project page with narrative write-ups, visualizations, and supporting assets. The site is designed for static hosting (for example, GitHub Pages) and all runtime assets live inside the `profile/` directory.
 
 ### Key Features
 
@@ -15,21 +15,27 @@ This repository contains an interactive, Three.js-powered solar system that doub
 
 ### Project Layout
 
-- `solar_system_cinematic_fixed.html`: Main portfolio entry point that imports `realistic_solar_cinematic_fixed.js`.
-- `realistic_solar_cinematic_fixed.js`: Core logic creating the sun, planets, comets, particle field, interactions, and project metadata.
-- `galaxy_loader.js`: Shared loader utilities and global state helpers.
-- `advanced_solar_css.css`: Styling for the portfolio shell, loader, control panel, and info cards.
-- `assets/`: Local textures, lens flare elements, and supporting static files.
-- `profile/`: Mirrors the main experience and stores individual project pages (for example `capstone.html`, `ad_auction_dashboard.html`).
-- `new/`: Experimental or backup copies of the same assets; keep or remove as needed.
+- `profile/solar_system_cinematic_fixed.html`: Main portfolio entry point that imports `realistic_solar_cinematic_fixed.js`.
+- `profile/realistic_solar_cinematic_fixed.js`: Core logic creating the sun, planets, comets, particle field, interactions, and project metadata.
+- `profile/galaxy_loader.js`: Shared loader utilities and global state helpers.
+- `profile/advanced_solar_css.css`: Styling for the portfolio shell, loader, control panel, and info cards.
+- `profile/assets/`: Local textures, lens flare elements, and supporting static files.
+- `profile/*.html`: Stand-alone pages for each showcased project (for example `capstone.html`, `ad_auction_dashboard.html`).
+- `profile/reports/`: Supporting PDF or HTML reports linked from the project pages.
 
 ### Run Locally
 
-Serve the repository with any static web server (Python, Node.js, etc.) and open `solar_system_cinematic_fixed.html`. Direct `file://` access is not recommended because ES Module imports and texture requests can be blocked by the browser’s CORS policy.
+Serve the repository with any static web server (Python, Node.js, etc.) and open `profile/solar_system_cinematic_fixed.html`. Direct `file://` access is not recommended because ES Module imports and texture requests can be blocked by the browser’s CORS policy.
 
 ### Customize
 
 Update `PROJECT_TIMELINE` in `realistic_solar_cinematic_fixed.js` to add, remove, or reorder planets/projects. Swap textures in `assets/textures/`, edit `advanced_solar_css.css` for appearance tweaks, and adjust loader messaging in `galaxy_loader.js`.
+
+## TODO
+
+- [ ] Extend the `PROJECT_TIMELINE` with additional star markers that highlight open-source contributions, published papers, and other notable milestones alongside existing coursework planets.
+- [ ] Design distinctive iconography and metadata blocks for these research- and community-focused stars so visitors can quickly differentiate them from class projects.
+- [ ] Curate supporting assets (PDFs, repositories, demo links) for each new star entry to ensure visitors can explore the underlying work.
 
 ### Deployment
 
