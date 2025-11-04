@@ -15,7 +15,7 @@ This repository contains an interactive, Three.js-powered solar system that doub
 
 ### Project Layout
 
-- `profile/solar_system_cinematic_fixed.html`: Main portfolio entry point that imports `realistic_solar_cinematic_fixed.js`.
+- `profile/index.html`: Main portfolio entry point that imports `realistic_solar_cinematic_fixed.js`.
 - `profile/realistic_solar_cinematic_fixed.js`: Core logic creating the sun, planets, comets, particle field, interactions, and project metadata.
 - `profile/galaxy_loader.js`: Shared loader utilities and global state helpers.
 - `profile/advanced_solar_css.css`: Styling for the portfolio shell, loader, control panel, and info cards.
@@ -25,7 +25,7 @@ This repository contains an interactive, Three.js-powered solar system that doub
 
 ### Run Locally
 
-Serve the repository with any static web server (Python, Node.js, etc.) and open `profile/solar_system_cinematic_fixed.html`. Direct `file://` access is not recommended because ES Module imports and texture requests can be blocked by the browser’s CORS policy.
+Serve the repository with any static web server (Python, Node.js, etc.) and open `profile/index.html`. Direct `file://` access is not recommended because ES Module imports and texture requests can be blocked by the browser’s CORS policy.
 
 ### Customize
 
