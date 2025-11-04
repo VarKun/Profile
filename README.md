@@ -1,7 +1,7 @@
 # Interactive Solar System Portfolio
 
 
-## Overview (English)
+## Overview 
 
 This repository contains an interactive, Three.js-powered solar system that doubles as a personal coursework portfolio. Each planet links to a dedicated project page with narrative write-ups, visualizations, and supporting assets. The site is designed for static hosting (for example, GitHub Pages).
 
